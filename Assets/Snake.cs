@@ -24,10 +24,15 @@ public class Snake : MonoBehaviour {
 		Debug.Log("collider: " + col.gameObject.name);
         if (col.tag == "food")
         {
-            Tail.Grow(5);
-            //Destroy(col.gameObject);
+            Tail.Grow(15);
             StartCoroutine(Tail.Flash());
             Food.Respawn();
+        }
+        if (col.gameObject.name == "Tail")
+        {
+            speed = 0f;
+            rotationSpeed = 0f;
+            GameObject.FindObjectOfType<GameManager>().EndGame();
         }
 
     }

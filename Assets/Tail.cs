@@ -8,12 +8,12 @@ using System.Linq;
 
 public class Tail : MonoBehaviour {
 	static LineRenderer line;
-	EdgeCollider2D col;
+	static EdgeCollider2D col;
 
 	static List<Vector2> points;
-	public float pointSpacing =.1f;
+	public float pointSpacing =0.1f;
 	public Transform snake;
-
+    private static Vector3 snakepos;
     private static int length;
     
 
@@ -32,7 +32,9 @@ public class Tail : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        if (Vector3.Distance (points.Last(), snake.position )> pointSpacing)
+        snakepos = snake.position;
+        
+        if (Vector3.Distance (points.Last(), snakepos )> pointSpacing)
 			SetPoint ();
         if (points.Count == length)
             points.Remove(points.First());
@@ -40,44 +42,50 @@ public class Tail : MonoBehaviour {
     }
 
     void SetPoint() {
-        if (points.Count > 1)
-        {
-            col.points = points.ToArray<Vector2>();
-            
-        }
+        if (points.Count > 1) { 
+            col.enabled = false;
+            col.points = points.GetRange(0, points.Count() - 2).ToArray();
+    }
 
-        points.Add(snake.position);
-
+        points.Add(snakepos); 
         line.numPositions = points.Count;
         
         for (int i = 0; i < length; i++)
         {
             line.SetPosition(i, points.ElementAt(i));
         }
-        line.SetPosition(points.Count - 1, snake.position);
+        line.SetPosition(length - 1, snakepos);
+        col.enabled = true;
     }
 
     public static void Grow(int size)
     {
         for (int i = 0; i < size; i++)
-            points.Add(points.Last());
+        {
+            points.Add(snakepos);
+        }
         length += size;
         print("snake length: " + length);
+        
     }
 
     public static IEnumerator<WaitForSeconds> Flash()
     {
         Gradient g = line.colorGradient;
-        Color c1 = Color.green;
-        print(g);
-        for (int i = 0; i < 3; i++)
+        Color c1 = Color.white;
+
+        for (int i = 0; i < 5; i++)
         {
+            yield return new WaitForSeconds(1/5f);
             line.startColor = c1;
             line.endColor = c1;
             yield return new WaitForSeconds(1/5f);
             line.colorGradient = g;
-            yield return new WaitForSeconds(1/5f);
+            
         }
+
+       
+        
     }
 
 }

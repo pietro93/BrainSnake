@@ -26,9 +26,4 @@ public class Food : MonoBehaviour
         pos = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
     }
 
-    public static IEnumerator<WaitForSeconds> Spawn()
-    {
-        yield return new WaitForSeconds(2f);
-        GameObject food = (GameObject)Instantiate(Resources.Load("Food"), Random.insideUnitCircle, Quaternion.identity );
-    }
 }
