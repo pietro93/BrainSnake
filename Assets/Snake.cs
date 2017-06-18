@@ -3,8 +3,8 @@
 
 public class Snake : MonoBehaviour {
 
-	public float speed = 3f;
-	public float rotationSpeed = 200f;
+	public float speed = 1.5f;
+	public float rotationSpeed = 150f;
 	float horizontal = 0f;
 
   
@@ -24,7 +24,7 @@ public class Snake : MonoBehaviour {
 		Debug.Log("collider: " + col.gameObject.name);
         if (col.tag == "food")
         {
-            Tail.Grow(15);
+            Tail.Grow(10);
             StartCoroutine(Tail.Flash());
             Food.Respawn();
         }

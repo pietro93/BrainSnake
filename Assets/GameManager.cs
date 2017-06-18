@@ -4,9 +4,19 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
+    private static bool hasStarted = false;
     private bool hasEnded = false;
 
-	public void EndGame()
+    
+    void Start()
+    {
+        if (hasStarted) { return; ; }
+
+        hasStarted = true;
+        StartCoroutine(PlayStartGameAnimation());
+    }
+
+    public void EndGame()
     {
         if (hasEnded) { return; ; }
 
@@ -14,10 +24,18 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(PlayEndGameAnimation());
     }
 
-    IEnumerator PlayEndGameAnimation()
+    IEnumerator PlayStartGameAnimation()
+    {
+        Debug.Log("Game starting");
+        yield return new WaitForSeconds(2.5f);
+        SceneManager.LoadScene("MainLevel");
+    }
+
+        IEnumerator PlayEndGameAnimation()
     {
         Debug.Log("GAME OVER");
         yield return new WaitForSeconds(1f);
-        //SceneManager.LoadScene(SceneManager.GetSceneByName(DeathScene));
+        SceneManager.LoadScene("DeathScene");
     }
+
 }

@@ -72,16 +72,22 @@ public class Tail : MonoBehaviour {
     public static IEnumerator<WaitForSeconds> Flash()
     {
         Gradient g = line.colorGradient;
-        Color c1 = Color.white;
+        Color w = Color.white;
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 3; i++)
         {
+            line.colorGradient = g;
             yield return new WaitForSeconds(1/5f);
-            line.startColor = c1;
-            line.endColor = c1;
+            line.startColor = w;
+            line.endColor = w;
             yield return new WaitForSeconds(1/5f);
             line.colorGradient = g;
-            
+            yield return new WaitForSeconds(1/5f);
+            line.startColor = w;
+            line.endColor = w;
+            yield return new WaitForSeconds(1/5f);
+            line.colorGradient = g;
+
         }
 
        
