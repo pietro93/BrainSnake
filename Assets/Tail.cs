@@ -65,7 +65,7 @@ public class Tail : MonoBehaviour {
             points.Add(snakepos);
         }
         length += size;
-        print("snake length: " + length);
+        Debug.Log("snake length: " + length);
         
     }
 

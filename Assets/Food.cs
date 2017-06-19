@@ -25,7 +25,7 @@ public class Food : MonoBehaviour
 
     public static void Respawn()
     {
-        pos = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
+        pos = new Vector3(Random.Range(-3.0f, 3.0f), Random.Range(-3.0f, 3.0f), -3);
         audio.Play();
     }
 

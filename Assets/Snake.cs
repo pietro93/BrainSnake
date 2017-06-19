@@ -27,6 +27,7 @@ public class Snake : MonoBehaviour {
             Tail.Grow(10);
             StartCoroutine(Tail.Flash());
             Food.Respawn();
+            GameManager.updateScore(5);
         }
         if (col.gameObject.name == "Tail")
         {
