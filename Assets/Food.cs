@@ -6,12 +6,14 @@ public class Food : MonoBehaviour
 {
     public static GameObject foodPrefab;
     public static Vector3 pos;
+    public static AudioSource audio;
    
     // Use this for initialization
     void Start()
     {
         pos = transform.position;
         gameObject.SetActive(true);
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -24,6 +26,7 @@ public class Food : MonoBehaviour
     public static void Respawn()
     {
         pos = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
+        audio.Play();
     }
 
 }
