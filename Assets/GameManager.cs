@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
-    private static bool hasStarted = false;
     private bool hasEnded = false;
     public static int score;
 
@@ -14,14 +13,17 @@ public class GameManager : MonoBehaviour {
         DontDestroyOnLoad(transform.gameObject);
     }
 
-    void Start()
-    {
-        if (hasStarted) { return; ; }
 
-        hasStarted = true;
+    public void StartGame()
+    {
         score = 0;
         StartCoroutine(PlayStartGameAnimation());
-        
+    }
+
+    public void StartTraining()
+    {
+        score = 0;
+        StartCoroutine(PlayStartGameAnimation());
     }
 
     public void EndGame()
