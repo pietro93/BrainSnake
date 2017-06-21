@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
     private bool hasEnded = false;
     public static int score;
 
+
     void Awake()
     {
         DontDestroyOnLoad(transform.gameObject);

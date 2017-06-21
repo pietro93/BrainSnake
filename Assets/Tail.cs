@@ -63,8 +63,8 @@ public class Tail : MonoBehaviour {
         for (int i = 0; i < size; i++)
         {
             points.Add(snakepos);
+            length++;
         }
-        length += size;
         Debug.Log("snake length: " + length);
         
     }
@@ -74,7 +74,7 @@ public class Tail : MonoBehaviour {
         Gradient g = line.colorGradient;
         Color w = Color.white;
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 2; i++)
         {
             line.colorGradient = g;
             yield return new WaitForSeconds(1/5f);
