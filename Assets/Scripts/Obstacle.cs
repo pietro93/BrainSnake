@@ -1,0 +1,75 @@
+﻿/*
+ * Code by Pietro Romeo
+ * June 2017
+ */
+
+using System.Collections.Generic;
+using UnityEngine;
+
+
+public class Obstacle : MonoBehaviour
+{
+
+    public static GameObject obstaclePrefab;
+    public static AudioSource aud;
+    private static Vector3 pos;
+    private static SpriteRenderer spr;
+    private static Transform obs;
+    private CircleCollider2D col;
+    private bool active;
+
+
+    // Use this for initialization
+    void Start()
+    { 
+            aud = GetComponent<AudioSource>();
+            spr = GetComponent<SpriteRenderer>();
+            col = GetComponent<CircleCollider2D>();
+        active = false;
+        transform.position = new Vector3(-99f, -99f, -99f);
+
+    }
+
+    private void Update()
+    {
+        if (Score.getScore() == 200 & !active)
+        {
+            StartCoroutine(Flash());
+            active = true;
+        }
+            
+    }
+
+    private void respawn()
+    {
+        pos = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-4.0f, 4.0f), -3) + new Vector3(0, 0, 0);
+        if (pos == Snake.Position())
+            respawn();
+        transform.position = pos;
+        StartCoroutine(Flash());
+    }
+
+    private IEnumerator<WaitForSeconds> Flash()
+    {
+        col.enabled = false;
+        for (int i = 0; i < 5; i++)
+        {
+            yield return new WaitForSeconds(1f / (i + 3));
+            spr.enabled = false;
+            yield return new WaitForSeconds(1f / (i + 3));
+            spr.enabled = true;
+        }
+        col.enabled = true;
+        yield return new WaitForSeconds(3f);
+        col.enabled = false;
+        for (int i = 0; i < 5; i++)
+        {
+            yield return new WaitForSeconds(1f / (i + 3));
+            spr.enabled = false;
+            yield return new WaitForSeconds(1f / (i + 3));
+            spr.enabled = true;
+        }
+        col.enabled = false;
+        respawn();
+    }
+}

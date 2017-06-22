@@ -1,4 +1,9 @@
-﻿//using System.Collections;
+﻿/*
+ * Code by Pietro Romeo
+ * June 2017
+ */
+
+//using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -15,14 +20,16 @@ public class Tail : MonoBehaviour {
 	public Transform snake;
     private static Vector3 snakepos;
     private static int length;
-    
+    private static Gradient grad;
 
 
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start () {
 		line = GetComponent<LineRenderer> ();
 		col = GetComponent <EdgeCollider2D> ();
 		points = new List<Vector2>();
+        grad = line.colorGradient;
         length = 1;
         points.Add(snake.position);
         Grow(4);
@@ -44,11 +51,11 @@ public class Tail : MonoBehaviour {
     void SetPoint() {
         if (points.Count > 1) { 
             col.enabled = false;
-            col.points = points.GetRange(0, points.Count() - 2).ToArray();
+            col.points = points.GetRange(0, points.Count() - 1).ToArray();
         }
 
         points.Add(snakepos); 
-        line.positionCount = points.Count;
+        line.numPositions = points.Count;
         
         for (int i = 0; i < length; i++)
         {
@@ -61,9 +68,9 @@ public class Tail : MonoBehaviour {
     public void reset()
     {
         points.Clear();
-        points.Add(snake.position);
         length = 1;
-        Update();
+        points.Add(snake.position);
+        //Update();
         Grow(4);
     }
 
@@ -72,30 +79,31 @@ public class Tail : MonoBehaviour {
         for (int i = 0; i < size; i++)
         {
             points.Add(snakepos);
+            length++;
         }
-        length += size;
+        
         Debug.Log("snake length: " + length);
         
     }
 
     public static IEnumerator<WaitForSeconds> Flash()
     {
-        Gradient g = line.colorGradient;
+        //UPDATE fixed flickering 22.06
         Color w = Color.white;
 
         for (int i = 0; i < 3; i++)
         {
-            line.colorGradient = g;
+            line.colorGradient = grad;
             yield return new WaitForSeconds(1/5f);
             line.startColor = w;
             line.endColor = w;
             yield return new WaitForSeconds(1/5f);
-            line.colorGradient = g;
+            line.colorGradient = grad;
             yield return new WaitForSeconds(1/5f);
             line.startColor = w;
             line.endColor = w;
             yield return new WaitForSeconds(1/5f);
-            line.colorGradient = g;
+            line.colorGradient = grad;
 
         }
 

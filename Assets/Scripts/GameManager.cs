@@ -1,7 +1,11 @@
-﻿using System.Collections;
+﻿/*
+ * Code by Pietro Romeo
+ * June 2017
+ */
+
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -16,7 +20,6 @@ public class GameManager : MonoBehaviour {
 
     public void StartGame()
     {
-        score = 0;
         StartCoroutine(PlayStartGameAnimation());
     }
 
@@ -51,14 +54,5 @@ public class GameManager : MonoBehaviour {
         SceneManager.LoadScene("DeathScene");
     }
 
-    public static void updateScore(int i)
-    {
-        score += i;
-        Debug.Log("New score: " + score);
-    }
 
-    public static int getScore()
-    {
-        return score;
-    }
 }

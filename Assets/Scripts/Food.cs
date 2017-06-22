@@ -16,7 +16,7 @@ public class Food : MonoBehaviour
 
     public void respawn()
     {
-        transform.position = new Vector3(Random.Range(-3.0f, 3.0f), Random.Range(-3.0f, 3.0f), -3);
+        transform.position = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-4.0f, 4.0f), -3) + new Vector3(0,0,0);
         aud.Play();
     }
 

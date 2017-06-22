@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿/*
+ * Code by Pietro Romeo
+ * June 2017 
+ */
+
+using UnityEngine;
 using UnityEngine.UI;
 
 
@@ -11,7 +16,7 @@ public class Snake : MonoBehaviour
     public float speed = 1.5f;
     public float rotationSpeed = 2.5f;
     private bool death = false;
-    private Vector3 pos;
+    public static Vector3 pos;
     private AudioSource aud;
 
     private float orgRot = 0;
@@ -25,6 +30,8 @@ public class Snake : MonoBehaviour
     public GameObject deathScreen;
     public GameObject tail;
     public GameObject food;
+
+    
 
     private void Start()
     {
@@ -85,9 +92,10 @@ public class Snake : MonoBehaviour
     {
         if (col.tag == "food")
         {
-            //Tail.Grow(10);
-            //StartCoroutine(Tail.Flash());
+            Tail.Grow(5);
+            StartCoroutine(Tail.Flash());
             food.GetComponent<Food>().respawn();
+            Score.updateScore(50); //UPDATE 
         }
         else if (col.tag == "Wall")
         {
@@ -164,5 +172,10 @@ public class Snake : MonoBehaviour
     {
         rotationActive = false;
         direction = OFF;
+    }
+
+    public static Vector3 Position()
+    {
+        return pos;
     }
 }
