@@ -1,0 +1,80 @@
+Mono path[0] = 'C:/Users/xpiet/Dropbox/Uni/UT/BCI/BrainSnake 2.0/Build/BrainSnake_Data/Managed'
+Mono path[1] = 'C:/Users/xpiet/Dropbox/Uni/UT/BCI/BrainSnake 2.0/Build/BrainSnake_Data/Mono'
+Mono config path = 'C:/Users/xpiet/Dropbox/Uni/UT/BCI/BrainSnake 2.0/Build/BrainSnake_Data/Mono/etc'
+Mono config path = 'C:/Users/xpiet/Dropbox/Uni/UT/BCI/BrainSnake 2.0/Build/BrainSnake_Data/Mono/etc'
+PlayerConnection initialized from C:/Users/xpiet/Dropbox/Uni/UT/BCI/BrainSnake 2.0/Build/BrainSnake_Data (debug = 0)
+PlayerConnection initialized network socket : 0.0.0.0 55450
+PlayerConnection initialized network socket : 0.0.0.0 55422
+Multi-casting "[IP] 130.89.89.75 [Port] 55450 [Flags] 3 [Guid] 2201529429 [EditorId] 1380019115 [Version] 1048832 [Id] WindowsPlayer(DESKTOP-1B0S9LT) [Debug] 1" to [225.0.0.222:54997]...
+Waiting for connection from host on [0.0.0.0:55450]...
+Multi-casting "[IP] 130.89.89.75 [Port] 55422 [Flags] 3 [Guid] 2193061645 [EditorId] 1380019115 [Version] 1048832 [Id] WindowsPlayer(DESKTOP-1B0S9LT) [Debug] 1" to [225.0.0.222:54997]...
+Waiting for connection from host on [0.0.0.0:55422]...
+Timed out. Continuing without host connection.
+Started listening to [0.0.0.0:55422]
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,defer=y,address=0.0.0.0:56645
+Timed out. Continuing without host connection.
+Started listening to [0.0.0.0:55450]
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,defer=y,address=0.0.0.0:56429
+PlayerConnection already initialized - listening to [0.0.0.0:55422]
+PlayerConnection already initialized - listening to [0.0.0.0:55450]
+Player data archive not found at `C:/Users/xpiet/Dropbox/Uni/UT/BCI/BrainSnake 2.0/Build/BrainSnake_Data/data.unity3d`, using local filesystemInitialize engine version: 5.6.1f1 (2860b30f0b54)
+Initialize engine version: 5.6.1f1 (2860b30f0b54)
+GfxDevice: creating device client; threaded=1
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 960M (ID=0x139b)
+    Vendor:   NVIDIA
+    VRAM:     4064 MB
+    Driver:   21.21.13.6909
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: NVIDIA GeForce GTX 960M (ID=0x139b)
+    Vendor:   NVIDIA
+    VRAM:     4064 MB
+    Driver:   21.21.13.6909
+Begin MonoManager ReloadAssembly
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Loading C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Loading C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Loading C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+- Completed reload, in  0.031 seconds
+- Completed reload, in  0.033 seconds
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\System.dll (this message is harmless)
+Platform assembly: C:\Users\xpiet\Dropbox\Uni\UT\BCI\BrainSnake 2.0\Build\BrainSnake_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 1.972542 ms
+reactor filed to acomplish request with code {1234}, bytesReceived {0}
+reactor filed to acomplish request with code {1234}, bytesReceived {0}
+reactor filed to acomplish request with code {1234}, bytesReceived {0}
+reactor filed to acomplish request with code {1234}, bytesReceived {0}
+reactor filed to acomplish request with code {1234}, bytesReceived {0}
+reactor filed to acomplish request with code {1234}, bytesReceived {0}
+reactor filed to acomplish request with code {1234}, bytesReceived {0}
+Setting up 4 worker threads for Enlighten.
+  Thread -> id: 2794 -> priority: 1 
+  Thread -> id: 4058 -> priority: 1 
+  Thread -> id: 6b3c -> priority: 1 
+  Thread -> id: 5cc0 -> priority: 1 
+reactor filed to acomplish request with code {1234}, bytesReceived {0}
