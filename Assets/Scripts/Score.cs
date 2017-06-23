@@ -11,8 +11,9 @@ public class Score : MonoBehaviour {
     private Text txt;
     private static int score;
 
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start () {
         txt = GetComponent<Text>();
         score = 0;
 	}

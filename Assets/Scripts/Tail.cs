@@ -24,6 +24,7 @@ public class Tail : MonoBehaviour {
 
 
 
+
     // Use this for initialization
     void Start () {
 		line = GetComponent<LineRenderer> ();
@@ -45,6 +46,13 @@ public class Tail : MonoBehaviour {
 			SetPoint ();
         if (points.Count == length)
             points.Remove(points.First());
+         
+        if (length < 30) // dirty hack to avoid the snake dying in the beginning if it hits a wall
+        {
+            col.enabled = false;
+        }
+        else
+            col.enabled = true;
 
     }
 
@@ -70,7 +78,7 @@ public class Tail : MonoBehaviour {
         points.Clear();
         length = 1;
         points.Add(snake.position);
-        //Update();
+        Update();
         Grow(4);
     }
 
@@ -80,8 +88,9 @@ public class Tail : MonoBehaviour {
         {
             points.Add(snakepos);
             length++;
+
         }
-        
+
         Debug.Log("snake length: " + length);
         
     }

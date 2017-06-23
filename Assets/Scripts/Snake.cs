@@ -5,6 +5,7 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 
 public class Snake : MonoBehaviour
@@ -31,7 +32,7 @@ public class Snake : MonoBehaviour
     public GameObject tail;
     public GameObject food;
 
-    
+
 
     private void Start()
     {
@@ -90,30 +91,36 @@ public class Snake : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
+        Debug.Log("collided with:" + col);
         if (col.tag == "food")
         {
             Tail.Grow(5);
             StartCoroutine(Tail.Flash());
             food.GetComponent<Food>().respawn();
-            Score.updateScore(50); //UPDATE 
+            Score.updateScore(50); //UPDATE
         }
         else if (col.tag == "Wall")
         {
             float rotZ = transform.eulerAngles.z;
             float rotZWall = col.gameObject.transform.eulerAngles.z;
-            transform.rotation = Quaternion.Euler(0, 0, rotZWall-rotZ);
+            transform.rotation = Quaternion.Euler(0, 0, rotZWall-rotZ+25);
         }
         else if (col.tag == "Wall_2")
         {
             float rotZ = transform.eulerAngles.z;
-            transform.rotation = Quaternion.Euler(0, 0, -rotZ);
+            transform.rotation = Quaternion.Euler(0, 0, -rotZ+25);
         }
         else
         {
             TurnOffRotationMode();
 
-            aud = GetComponent<AudioSource>();
-            aud.Play();
+            if (col.tag == "obstacle")
+                Obstacle.Play();
+            else
+            {
+                aud = GetComponent<AudioSource>();
+                aud.Play();
+            }
             death = true;
 
             deathScreen.GetComponent<Image>().CrossFadeAlpha(1, 1, false);
@@ -123,7 +130,6 @@ public class Snake : MonoBehaviour
     //rotate character in the left direction in percentage of the max rotation speed
     public void rotateLeft(float value = 1)
     {
-        Debug.Log("Value: " + value);
         transform.Rotate(0, 0, rotationSpeed * value);
     }
 
@@ -147,8 +153,8 @@ public class Snake : MonoBehaviour
         transform.position = new Vector3();
         transform.rotation = new Quaternion();
         deathScreen.GetComponent<Image>().CrossFadeAlpha(0, 1, false);
-        //tail.GetComponent<Tail>().reset();
         death = false;
+        tail.GetComponent<Tail>().reset();
     }
 
     public void TurnOnRotationMode(string direction)
@@ -178,4 +184,5 @@ public class Snake : MonoBehaviour
     {
         return pos;
     }
+
 }

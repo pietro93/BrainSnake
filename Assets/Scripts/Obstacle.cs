@@ -17,27 +17,30 @@ public class Obstacle : MonoBehaviour
     private static Transform obs;
     private CircleCollider2D col;
     private bool active;
+    private int id;
 
 
     // Use this for initialization
     void Start()
-    { 
-            aud = GetComponent<AudioSource>();
-            spr = GetComponent<SpriteRenderer>();
-            col = GetComponent<CircleCollider2D>();
+    {
+        id = Score.getScore();
+        aud = GetComponent<AudioSource>();
+        spr = GetComponent<SpriteRenderer>();
+        col = GetComponent<CircleCollider2D>();
         active = false;
-        transform.position = new Vector3(-99f, -99f, -99f);
+        transform.position = new Vector3(-99f, -99f, -3);
 
     }
 
     private void Update()
     {
-        if (Score.getScore() == 200 & !active)
+        if (Score.getScore() - 150 == id && !active)
         {
+            Instantiate(gameObject);
             StartCoroutine(Flash());
             active = true;
         }
-            
+
     }
 
     private void respawn()
@@ -54,9 +57,9 @@ public class Obstacle : MonoBehaviour
         col.enabled = false;
         for (int i = 0; i < 5; i++)
         {
-            yield return new WaitForSeconds(1f / (i + 3));
+            yield return new WaitForSeconds(1f / (i + 5));
             spr.enabled = false;
-            yield return new WaitForSeconds(1f / (i + 3));
+            yield return new WaitForSeconds(1f / (i + 5));
             spr.enabled = true;
         }
         col.enabled = true;
@@ -64,12 +67,17 @@ public class Obstacle : MonoBehaviour
         col.enabled = false;
         for (int i = 0; i < 5; i++)
         {
-            yield return new WaitForSeconds(1f / (i + 3));
+            yield return new WaitForSeconds(1f / (i + 5));
             spr.enabled = false;
-            yield return new WaitForSeconds(1f / (i + 3));
+            yield return new WaitForSeconds(1f / (i + 5));
             spr.enabled = true;
         }
         col.enabled = false;
         respawn();
+    }
+
+    public static void Play()
+    {
+        aud.Play();
     }
 }
