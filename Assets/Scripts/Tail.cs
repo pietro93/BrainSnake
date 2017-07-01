@@ -47,12 +47,12 @@ public class Tail : MonoBehaviour {
         if (points.Count == length)
             points.Remove(points.First());
          
-        if (length < 30) // dirty hack to avoid the snake dying in the beginning if it hits a wall
-        {
-            col.enabled = false;
-        }
-        else
-            col.enabled = true;
+        //if (length < 50) // dirty hack to avoid the snake dying in the beginning if it hits a wall
+        //{
+          //  col.enabled = false;
+        //}
+        //else
+           // col.enabled = true;
 
     }
 

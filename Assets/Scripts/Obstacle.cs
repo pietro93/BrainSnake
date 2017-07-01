@@ -34,7 +34,7 @@ public class Obstacle : MonoBehaviour
 
     private void Update()
     {
-        if (Score.getScore() - 150 == id && !active)
+        if ((Score.getScore() - 150 == id) && !active)
         {
             Instantiate(gameObject);
             StartCoroutine(Flash());
