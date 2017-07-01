@@ -180,7 +180,6 @@ public class LSLcontroller : MonoBehaviour
 
             else
             {
-
                 return sample[0];
 
             }
@@ -356,28 +355,7 @@ public class LSLcontroller : MonoBehaviour
             // update value otherwise
             else
             {
-                if (maxWindowSize > 0)
-                {
-                    value = getAutoscale(readRawValue());
-                }
-                else
-                {
-                    value = readRawValue();
-                }
-
-                if (value > 0)
-                {
-                    if (lastTrigger == false)
-                    {
-                        log("Beat");
-                        trigger = true;
-                    }
-                    lastTrigger = true;
-                }
-                else
-                {
-                    lastTrigger = false;
-                }
+                value = Mathf.Abs(readRawValue());
             }
         }
     }

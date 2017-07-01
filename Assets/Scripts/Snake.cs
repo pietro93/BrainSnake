@@ -1,11 +1,12 @@
 ﻿/*
- * Code by Pietro Romeo
- * June 2017 
+ * BrainSnake code by
+ * Pietro Romeo & Marc van Almkerk
+ * June 2017
  */
 
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
+using UnityEngine.Networking;
 
 
 public class Snake : MonoBehaviour
@@ -17,73 +18,64 @@ public class Snake : MonoBehaviour
     public float speed = 1.5f;
     public float rotationSpeed = 2.5f;
     private bool death = false;
-    public static Vector3 pos;
     private AudioSource aud;
 
     private float orgRot = 0;
     private string direction = OFF;
     private bool increasing;
     private float rot;
+    private float holdTimer = 0;
 
     private bool isConnected = false;
-    private bool rotationActive = false;
 
-    public GameObject deathScreen;
+    public GameManager GM;
     public GameObject tail;
     public GameObject food;
 
-
-
     private void Start()
     {
-        deathScreen.SetActive(true);
-        deathScreen.GetComponent<Image>().CrossFadeAlpha(0, 0, false);
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        pos = transform.position;
-    }
-
     void FixedUpdate()
     {
-        if (isConnected && !death && !rotationActive)//only execute when client is connected
+        if (isConnected && !death && direction == OFF)//only execute when client is connected
         {
+            //move snake forward
             transform.Translate(Vector2.up * speed * Time.fixedDeltaTime, Space.Self);
         }
-        else if (rotationActive)
+        else if (direction != OFF)
         {
-            if (direction == THETA_LEFT)
-            {
-                if (increasing) { transform.Rotate(0, 0, rotationSpeed); rot += rotationSpeed; }
-                else { transform.Rotate(0, 0, -rotationSpeed); rot -= rotationSpeed; }
+            //in rotation mode
 
-                if (this.rot >= 90)
-                {
-                    increasing = false;
-                    transform.rotation = Quaternion.Euler(0, 0, orgRot + 90);
-                }
-                else if (this.rot <= 0)
-                {
-                    increasing = true;
-                    transform.rotation = Quaternion.Euler(0, 0, orgRot);
-                }
+            //change the rotation of the snake
+            if (holdTimer == 0)
+            {
+                if (increasing) { transform.Rotate(0, 0, rotationSpeed); rot += Mathf.Abs(rotationSpeed); }
+                else { transform.Rotate(0, 0, -rotationSpeed); rot -= Mathf.Abs(rotationSpeed); }
+
+                //change pitch accordangly
+                GM.RpcSetPitch((rot / 90));
             }
-            else if (direction == THETA_RIGHT)
-            {
-                if (increasing) { transform.Rotate(0, 0, -rotationSpeed); rot += rotationSpeed; }
-                else { transform.Rotate(0, 0, +rotationSpeed); rot -= rotationSpeed; }
 
-                if (this.rot >= 90)
+            //change direction when 90 degrees are reached.
+            if (this.rot >= 90 || this.rot <= 0)
+            {
+                if(holdTimer == 0) holdTimer = 30;
+                holdTimer--;
+                if (holdTimer == 0)
                 {
-                    increasing = false;
-                    transform.rotation = Quaternion.Euler(0, 0, orgRot - 90);
-                }
-                else if (this.rot <= 0)
-                {
-                    increasing = true;
-                    transform.rotation = Quaternion.Euler(0, 0, orgRot);
+                    if (this.rot >= 90)
+                    {
+                        increasing = false;
+                        if (direction == THETA_LEFT) transform.rotation = Quaternion.Euler(0, 0, orgRot + 90);
+                        else transform.rotation = Quaternion.Euler(0, 0, orgRot - 90);
+                    }
+                    else
+                    {
+                        increasing = true;
+                        transform.rotation = Quaternion.Euler(0, 0, orgRot);
+                    }
                 }
             }
         }
@@ -91,53 +83,60 @@ public class Snake : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log("collided with:" + col);
-        if (col.tag == "food")
+        if (NetworkServer.active)
         {
-            Tail.Grow(5);
-            StartCoroutine(Tail.Flash());
-            food.GetComponent<Food>().respawn();
-            Score.updateScore(50); //UPDATE
-        }
-        else if (col.tag == "Wall")
-        {
-            float rotZ = transform.eulerAngles.z;
-            float rotZWall = col.gameObject.transform.eulerAngles.z;
-            transform.rotation = Quaternion.Euler(0, 0, rotZWall-rotZ+25);
-        }
-        else if (col.tag == "Wall_2")
-        {
-            float rotZ = transform.eulerAngles.z;
-            transform.rotation = Quaternion.Euler(0, 0, -rotZ+25);
-        }
-        else
-        {
-            TurnOffRotationMode();
+            if (col.tag == "food")
+            {
+                food.GetComponent<Food>().respawn();
+                GM.RpcUpdateScore(50);
 
-            if (col.tag == "obstacle")
-                Obstacle.Play();
+                if (Mathf.Floor(GM.getScore() / 150) > Obstacle.numBombs)
+                {
+                    GM.RpcAddBomb();
+                }
+            }
+            else if (col.tag == "Wall")
+            {
+                float rotZ = transform.eulerAngles.z;
+                float rotZWall = col.gameObject.transform.eulerAngles.z;
+                transform.rotation = Quaternion.Euler(0, 0, rotZWall - rotZ);
+            }
+            else if (col.tag == "Wall_2")
+            {
+                float rotZ = transform.eulerAngles.z;
+                transform.rotation = Quaternion.Euler(0, 0, -rotZ);
+            }
             else
             {
-                aud = GetComponent<AudioSource>();
-                aud.Play();
-            }
-            death = true;
+                TurnOffRotationMode();
 
-            deathScreen.GetComponent<Image>().CrossFadeAlpha(1, 1, false);
+                if (col.tag == "obstacle") {
+                    GM.RpcPlay(2);
+                }
+                else
+                {
+                    GM.RpcPlay(3);
+                }
+
+                resetPlayer();
+                GM.RpcUpdateDeath();
+
+            }
         }
     }
 
     //rotate character in the left direction in percentage of the max rotation speed
     public void rotateLeft(float value = 1)
     {
-        transform.Rotate(0, 0, rotationSpeed * value);
+        //Debug.Log("Value: " + value);
+        transform.Rotate(0, 0,  Mathf.Abs(rotationSpeed*3) * value);
     }
 
     //rotate character in the right direction in percentage of the max rotation speed
     public void rotateRight(float value = 1)
     {
-        Debug.Log("Value: " + value);
-        transform.Rotate(0, 0, -rotationSpeed * value);
+        //Debug.Log("Value: " + value);
+        transform.Rotate(0, 0, -Mathf.Abs(rotationSpeed*3) * value);
     }
 
     //call when client is connected
@@ -152,37 +151,47 @@ public class Snake : MonoBehaviour
         TurnOffRotationMode();
         transform.position = new Vector3();
         transform.rotation = new Quaternion();
-        deathScreen.GetComponent<Image>().CrossFadeAlpha(0, 1, false);
         death = false;
-        tail.GetComponent<Tail>().reset();
+        Obstacle.deleteBombs = true;
+        rotateRandom();
+
+        if(NetworkServer.active) GM.RpcResetTail();
     }
 
-    public void TurnOnRotationMode(string direction)
+    //set snake in rotation mode
+    public void TurnOnRotationMode(string direction, bool on = true)
     {
         if (direction == this.direction || this.direction == OFF)
         {
-            if (rotationActive)
+            if (!on)//redundant request, turn of rotation mode
             {
                 TurnOffRotationMode();
                 return;
             }
-            rotationActive = true;
+
+            //init rotation mode
             orgRot = transform.eulerAngles.z;
             this.direction = direction;
             increasing = true;
             rot = 0;
+            if (direction == THETA_LEFT) rotationSpeed = Mathf.Abs(rotationSpeed);
+            else if (direction == THETA_RIGHT) rotationSpeed = -Mathf.Abs(rotationSpeed);
+
+            //play audio
+            GM.RpcPlay(4);
         }
     }
 
+    //let snake go out rotation mode
     public void TurnOffRotationMode()
     {
-        rotationActive = false;
         direction = OFF;
+        GM.RpcSetPitch(1);
+        GM.RpcStop(4);
     }
 
-    public static Vector3 Position()
+    public void rotateRandom()
     {
-        return pos;
+        transform.rotation = Quaternion.Euler(0, 0, Random.value*360);
     }
-
 }

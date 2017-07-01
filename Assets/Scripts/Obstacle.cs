@@ -1,83 +1,77 @@
 ﻿/*
- * Code by Pietro Romeo
+ * BrainSnake code by
+ * Pietro Romeo & Marc van Almkerk
  * June 2017
  */
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 
 public class Obstacle : MonoBehaviour
 {
+    public static int numBombs = 0;
+    public static bool deleteBombs = false;
 
-    public static GameObject obstaclePrefab;
-    public static AudioSource aud;
-    private static Vector3 pos;
-    private static SpriteRenderer spr;
-    private static Transform obs;
-    private CircleCollider2D col;
-    private bool active;
-    private int id;
-
+    private GameObject snake;
+    private Animator Ani;
+    private bool respawned = false;
 
     // Use this for initialization
     void Start()
     {
-        id = Score.getScore();
-        aud = GetComponent<AudioSource>();
-        spr = GetComponent<SpriteRenderer>();
-        col = GetComponent<CircleCollider2D>();
-        active = false;
-        transform.position = new Vector3(-99f, -99f, -3);
+        Ani = GetComponent<Animator>();
+        transform.position = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-4.0f, 4.0f), -3) + new Vector3(0, 0, 0);
 
+        snake = GameObject.Find("Snake");
+
+        InvokeRepeating("startFlash", 0f, 5f);
     }
 
     private void Update()
     {
-        if ((Score.getScore() - 150 == id) && !active)
+        if (Ani.GetCurrentAnimatorStateInfo(0).IsName("Respawn") && !respawned)
         {
-            Instantiate(gameObject);
-            StartCoroutine(Flash());
-            active = true;
+            Ani.ResetTrigger("Flashing");
+            Ani.SetTrigger("Idle");
+            respawn();
         }
+        else if(Obstacle.deleteBombs)
+        {
+            Destroy(gameObject);
+        }
+    }
 
+    private void startFlash()
+    {
+        Ani.SetTrigger("Flashing");
+        Ani.ResetTrigger("Idle");
+        respawned = false;
     }
 
     private void respawn()
     {
-        pos = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-4.0f, 4.0f), -3) + new Vector3(0, 0, 0);
-        if (pos == Snake.Position())
+        Vector3 pos = new Vector3(Random.Range(-8.0f, 8.0f), Random.Range(-4.0f, 4.0f), -3) + new Vector3(0, 0, 0);
+        if (pos == snake.transform.position)
+        {
             respawn();
+            return;
+        }
         transform.position = pos;
-        StartCoroutine(Flash());
+        respawned = true;
     }
 
-    private IEnumerator<WaitForSeconds> Flash()
+    public static void AddBomb()
     {
-        col.enabled = false;
-        for (int i = 0; i < 5; i++)
-        {
-            yield return new WaitForSeconds(1f / (i + 5));
-            spr.enabled = false;
-            yield return new WaitForSeconds(1f / (i + 5));
-            spr.enabled = true;
-        }
-        col.enabled = true;
-        yield return new WaitForSeconds(3f);
-        col.enabled = false;
-        for (int i = 0; i < 5; i++)
-        {
-            yield return new WaitForSeconds(1f / (i + 5));
-            spr.enabled = false;
-            yield return new WaitForSeconds(1f / (i + 5));
-            spr.enabled = true;
-        }
-        col.enabled = false;
-        respawn();
+        GameObject prefab = (GameObject)Resources.Load("Obstacle", typeof(GameObject));
+        GameObject bomb = Instantiate(prefab);
+        NetworkServer.Spawn(bomb);
     }
 
-    public static void Play()
+    public static void register()
     {
-        aud.Play();
+        GameObject prefab = (GameObject)Resources.Load("Obstacle", typeof(GameObject));
+        ClientScene.RegisterPrefab(prefab);
     }
 }

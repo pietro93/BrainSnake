@@ -1,11 +1,13 @@
 ﻿/*
- * Code by Pietro Romeo
+ * BrainSnake code by
+ * Pietro Romeo & Marc van Almkerk
  * June 2017
  */
 
 //using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using System.Linq;
 
 [RequireComponent (typeof(LineRenderer))]
@@ -18,11 +20,10 @@ public class Tail : MonoBehaviour {
 	static List<Vector2> points;
 	public float pointSpacing =0.1f;
 	public Transform snake;
+    public GameManager GM;
     private static Vector3 snakepos;
-    private static int length;
+    private int length;
     private static Gradient grad;
-
-
 
 
     // Use this for initialization
@@ -31,9 +32,9 @@ public class Tail : MonoBehaviour {
 		col = GetComponent <EdgeCollider2D> ();
 		points = new List<Vector2>();
         grad = line.colorGradient;
-        length = 1;
-        points.Add(snake.position);
-        Grow(4);
+
+        length = 15;
+        SetPoint(new Vector3(0, 0, 0));
     }
 
 
@@ -41,83 +42,64 @@ public class Tail : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         snakepos = snake.position;
-        
-        if (Vector3.Distance (points.Last(), snakepos )> pointSpacing)
-			SetPoint ();
-        if (points.Count == length)
-            points.Remove(points.First());
-         
-        //if (length < 50) // dirty hack to avoid the snake dying in the beginning if it hits a wall
-        //{
-          //  col.enabled = false;
-        //}
-        //else
-           // col.enabled = true;
 
+        if (NetworkServer.active)
+        {
+            if (Vector2.Distance(points.Last(), snakepos) > pointSpacing)
+                 GM.RpcSetTailPoint(snakepos);
+        }
     }
 
-    void SetPoint() {
-        if (points.Count > 1) { 
-            col.enabled = false;
-            col.points = points.GetRange(0, points.Count() - 1).ToArray();
-        }
+    public void SetPoint(Vector3 pos) {
+        if (points.Count > 6)
+            col.points = points.GetRange(5,points.Count-5).ToArray<Vector2>();
 
-        points.Add(snakepos); 
-        line.numPositions = points.Count;
-        
-        for (int i = 0; i < length; i++)
+        if (points.Count == length)
         {
-            line.SetPosition(i, points.ElementAt(i));
+            points.RemoveAt(0);
+            points.Add(pos);
         }
-        line.SetPosition(length - 1, snakepos);
-        col.enabled = true;
+        else points.Add(pos);
+
+        line.numPositions = points.Count;
+        for (int i = 0; i < points.Count; i++)
+        {
+            line.SetPosition(i, points[i]);
+        }
     }
 
     public void reset()
     {
         points.Clear();
-        length = 1;
-        points.Add(snake.position);
-        Update();
-        Grow(4);
+        SetPoint(new Vector3(0, 0, 0));
+        length = 15;
     }
 
-    public static void Grow(int size)
+    public void Grow(int size)
     {
-        for (int i = 0; i < size; i++)
-        {
-            points.Add(snakepos);
-            length++;
-
-        }
-
-        Debug.Log("snake length: " + length);
-        
+        length += size;
     }
 
     public static IEnumerator<WaitForSeconds> Flash()
     {
-        //UPDATE fixed flickering 22.06
         Color w = Color.white;
 
         for (int i = 0; i < 3; i++)
         {
             line.colorGradient = grad;
-            yield return new WaitForSeconds(1/5f);
+            yield return new WaitForSeconds(1 / 5f);
             line.startColor = w;
             line.endColor = w;
-            yield return new WaitForSeconds(1/5f);
+            yield return new WaitForSeconds(1 / 5f);
             line.colorGradient = grad;
-            yield return new WaitForSeconds(1/5f);
+            yield return new WaitForSeconds(1 / 5f);
             line.startColor = w;
             line.endColor = w;
-            yield return new WaitForSeconds(1/5f);
+            yield return new WaitForSeconds(1 / 5f);
             line.colorGradient = grad;
 
         }
 
-       
-        
     }
 
 }

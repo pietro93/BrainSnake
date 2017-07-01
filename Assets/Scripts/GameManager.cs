@@ -3,57 +3,87 @@
  * June 2017
  */
 
-using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : NetworkBehaviour {
 
-    private bool hasEnded = false;
-    public static int score;
+    public Text ScoreTxt;
+    public Text DeathsTxt;
+    public Text HighscoreTxt;
+    public Tail tail;
+    private int score = 0, deaths = 0, highscore = 0;
 
-    void Awake()
+    public void Start()
     {
-        DontDestroyOnLoad(transform.gameObject);
-
+        Obstacle.register();
     }
 
-
-    public void StartGame()
+    [ClientRpc]
+    public void RpcUpdateScore(int i)
     {
-        StartCoroutine(PlayStartGameAnimation());
+        score += i;
+        tail.Grow(15);
+        StartCoroutine(Tail.Flash());
+        ScoreTxt.text = "Score: " + score;
+        GetComponents<AudioSource>()[0].Play();
     }
 
-    public void StartTraining()
+    [ClientRpc]
+    public void RpcUpdateDeath()
     {
+        deaths += 1;
+        DeathsTxt.text = "Deaths: " + deaths;
+
+        if (score > highscore) highscore = score;
+        HighscoreTxt.text = "Highscore: " + highscore;
+
         score = 0;
-        StartCoroutine(PlayStartGameAnimation());
+        ScoreTxt.text = "Score: " + score;
     }
 
-    public void EndGame()
+    [ClientRpc]
+    public void RpcSetTailPoint(Vector3 pos)
     {
-        if (hasEnded) { return; ; }
-
-        hasEnded = true;
-        StartCoroutine(PlayEndGameAnimation());
-        GetComponent<AudioSource>().Stop();
+        tail.SetPoint(pos);
     }
 
-    IEnumerator PlayStartGameAnimation()
+    [ClientRpc]
+    public void RpcResetTail()
     {
-        Debug.Log("Game starting");
-        yield return new WaitForSeconds(3.5f);
-        SceneManager.LoadScene("MainLevel");
-
+        tail.GetComponent<Tail>().reset();
     }
 
-        IEnumerator PlayEndGameAnimation()
+    [ClientRpc]
+    public void RpcAddBomb()
     {
-        print("GAME OVER");
-        print("Final score: " + score);
-        yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene("DeathScene");
+        Obstacle.deleteBombs = false;
+        Obstacle.numBombs++;
+        if(NetworkServer.active) Obstacle.AddBomb();
     }
 
+    [ClientRpc]
+    public void RpcPlay(int sound)
+    {
+        GetComponents<AudioSource>()[sound-1].Play();
+    }
 
+    [ClientRpc]
+    public void RpcStop(int sound)
+    {
+        GetComponents<AudioSource>()[sound - 1].Stop();
+    }
+
+    [ClientRpc]
+    public void RpcSetPitch(float value)
+    {
+        AudioSource aud = GetComponents<AudioSource>()[3];
+        aud.pitch = 1 + value;
+    }
+
+    public int getScore()
+    {
+        return score;
+    }
 }
